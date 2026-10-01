@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Registration - Seminar Hall Booking System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="app-navbar">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-icon"><i class="fa-solid fa-building-columns"></i></div>
+      <span>Seminar Hall <span style="color: #60A5FA; font-weight:400;">Booking System</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="calendar.html" class="nav-btn"><i class="fa-regular fa-calendar-days"></i> Public Calendar</a>
+    </div>
+  </nav>
+
+  <!-- LOGIN & SIGNUP CARD -->
+  <div class="page-container d-flex align-items-center justify-content-center" style="min-height: 78vh;">
+    <div class="ws-card" style="width: 100%; max-width: 440px; padding: 2.25rem;">
+
+      <!-- LOGIN SECTION -->
+      <div id="loginCard">
+        <div class="text-center mb-4">
+          <div class="brand-icon mx-auto mb-2" style="width: 48px; height: 48px; font-size: 1.4rem;">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <h3 style="color: var(--primary-navy); font-weight: 700; margin-bottom: 4px;">Account Login</h3>
+          <p class="ws-subtitle">Sign in to request or manage seminar hall slots</p>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label"><i class="fa-solid fa-user-gear me-1"></i> Login As</label>
+          <select id="role" class="form-select">
+            <option value="user">Student / Faculty Member</option>
+            <option value="admin">System Administrator</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label"><i class="fa-solid fa-envelope me-1"></i> Email Address</label>
+          <input id="email" type="email" class="form-control" placeholder="user@mmcoe.edu.in">
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label"><i class="fa-solid fa-key me-1"></i> Password</label>
+          <input id="password" type="password" class="form-control" placeholder="Enter your password">
+        </div>
+
+        <button class="btn-ws-primary w-100 py-2 mb-3" onclick="login()">
+          <i class="fa-solid fa-right-to-bracket"></i> Sign In
+        </button>
+
+        <p class="text-center mb-0" style="color: var(--secondary-text); font-size: 0.9rem;">
+          Don't have an account? 
+          <a href="#" onclick="showSignup(); return false;" style="color: var(--royal-blue); font-weight: 600; text-decoration: none;">
+            Create Account
+          </a>
+        </p>
+      </div>
+
+      <!-- SIGNUP SECTION -->
+      <div id="signupSection" style="display: none;">
+        <div class="text-center mb-4">
+          <div class="brand-icon mx-auto mb-2" style="width: 48px; height: 48px; font-size: 1.4rem; background: linear-gradient(135deg, #159B75, #22C55E);">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <h3 style="color: var(--primary-navy); font-weight: 700; margin-bottom: 4px;">Create Account</h3>
+          <p class="ws-subtitle">Use your official @mmcoe.edu.in email</p>
+        </div>
+
+        <select id="roleSignup" class="d-none">
+          <option value="user">user</option>
+        </select>
+
+        <div class="form-group mb-2">
+          <label class="form-label">Full Name</label>
+          <input id="name" class="form-control" placeholder="Prof. Jane Doe / Student Name">
+        </div>
+
+        <div class="form-group mb-2">
+          <label class="form-label">College Email (@mmcoe.edu.in)</label>
+          <input id="emailSignup" type="email" class="form-control" placeholder="name@mmcoe.edu.in">
+        </div>
+
+        <div class="form-group mb-2">
+          <label class="form-label">Phone Number</label>
+          <input id="phone" class="form-control" placeholder="9876543210">
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label">Password</label>
+          <input id="passwordSignup" type="password" class="form-control" placeholder="Choose a password">
+        </div>
+
+        <button class="btn-ws-primary w-100 py-2 mb-3" style="background-color: var(--success);" onclick="signup()">
+          <i class="fa-solid fa-user-check"></i> Register Account
+        </button>
+
+        <p class="text-center mb-0" style="color: var(--secondary-text); font-size: 0.9rem;">
+          Already registered? 
+          <a href="#" onclick="hideSignup(); return false;" style="color: var(--royal-blue); font-weight: 600; text-decoration: none;">
+            Back to Sign In
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    Seminar Hall Booking System &copy; 2026. All rights reserved.
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function showSignup() {
+      document.getElementById("loginCard").style.display = "none";
+      document.getElementById("signupSection").style.display = "block";
+    }
+
+    function hideSignup() {
+      document.getElementById("signupSection").style.display = "none";
+      document.getElementById("loginCard").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

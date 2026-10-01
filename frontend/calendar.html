@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seminar Hall Calendar - Seminar Hall Booking System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="app-navbar">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-icon"><i class="fa-solid fa-building-columns"></i></div>
+      <span>Seminar Hall <span style="color: #60A5FA; font-weight:400;">Booking System</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="calendar.html" class="nav-btn active"><i class="fa-regular fa-calendar-days"></i> Calendar</a>
+      <a href="booking.html" class="nav-btn"><i class="fa-solid fa-plus-circle"></i> Book Slot</a>
+      <a href="dashboard.html" class="nav-btn"><i class="fa-solid fa-clock-rotate-left"></i> My Requests</a>
+      <a href="#" onclick="logout(); return false;" class="btn-nav-logout ms-2"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-container" style="max-height: calc(100vh - 80px);">
+    
+    <!-- CARD CONTAINER -->
+    <div class="ws-card mb-2" style="padding: 1rem 1.25rem;">
+      <div class="ws-card-header mb-2 pb-2">
+        <div>
+          <h3 class="ws-title" style="font-size: 1.15rem;">
+            <i class="fa-regular fa-calendar-check" style="color: var(--royal-blue);"></i> Seminar Hall Availability Calendar
+          </h3>
+        </div>
+        <div>
+          <a href="booking.html" class="btn-ws-primary" style="padding: 5px 14px; font-size: 0.82rem;">
+            <i class="fa-solid fa-calendar-plus"></i> Request Booking
+          </a>
+        </div>
+      </div>
+
+      <!-- LEGEND -->
+      <div class="calendar-legend py-1 mb-2">
+        <span class="legend-item"><span class="legend-dot approved"></span> Approved Booking</span>
+        <span class="legend-item"><span class="legend-dot pending"></span> Pending Approval</span>
+        <span class="legend-item"><span class="legend-dot holiday"></span> Holiday / Campus Closed</span>
+        <span class="ms-auto text-muted" style="font-size: 0.78rem;">
+          <i class="fa-solid fa-mouse-pointer text-primary me-1"></i> Click any date cell to book a slot
+        </span>
+      </div>
+
+      <!-- FULLCALENDAR MOUNT -->
+      <div id="calendar"></div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="app-footer py-2">
+    Seminar Hall Booking System &copy; 2026. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="holidays.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seminar Hall Booking System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="app-navbar">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-icon"><i class="fa-solid fa-building-columns"></i></div>
+      <span>Seminar Hall <span style="color: #60A5FA; font-weight:400;">Booking System</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="login.html" class="nav-btn"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="calendar.html" class="nav-btn"><i class="fa-regular fa-calendar-days"></i> Public Calendar</a>
+      <a href="login.html" class="btn-ws-primary ms-2"><i class="fa-solid fa-rocket"></i> Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <div class="page-container">
+    <div class="ws-card" style="padding: 2.25rem 2rem; margin-top: 0.5rem;">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <span class="badge badge-approved mb-3" style="font-size: 0.85rem; padding: 6px 14px;">
+            <i class="fa-solid fa-graduation-cap"></i> MMCOE Official Booking Portal
+          </span>
+          <h1 style="color: var(--primary-navy); font-weight: 800; font-size: 2.5rem; line-height: 1.25; margin-bottom: 1rem;">
+            Seminar Hall <br><span style="color: var(--royal-blue);">Booking System</span>
+          </h1>
+          <p class="ws-subtitle" style="font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            An efficient and professional hall scheduling platform designed for students, faculty, departments, and event organizers. Check real-time hall availability, submit slot requests online, and track approvals seamlessly.
+          </p>
+
+          <div class="d-flex gap-3 flex-wrap mb-3">
+            <a href="login.html" class="btn-ws-primary" style="padding: 10px 24px; font-size: 0.95rem;">
+              Get Started <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="calendar.html" class="btn-ws-outline" style="padding: 10px 20px; font-size: 0.95rem;">
+              <i class="fa-regular fa-calendar-days"></i> View Availability Calendar
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-6 text-center">
+          <div style="position: relative; padding: 6px; background: #ffffff; border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow-md);">
+            <img src="seminarHall.jpeg" alt="Seminar Hall Auditorium" class="img-fluid" style="border-radius: 12px; width: 100%; height: 310px; object-fit: cover;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT THE SYSTEM SECTION -->
+    <div class="ws-card">
+      <div class="ws-card-header mb-2">
+        <h3 class="ws-title"><i class="fa-solid fa-circle-info" style="color: var(--royal-blue);"></i> About the System</h3>
+      </div>
+      <p style="color: var(--main-text); font-size: 0.95rem; line-height: 1.6;">
+        The Seminar Hall Booking System simplifies the reservation process for academic seminars, workshops, guest lectures, and cultural events. It provides an intuitive interface for checking vacant slots, submitting instant booking requests with conflict prevention, and enabling administrators to review and approve bookings efficiently.
+      </p>
+    </div>
+
+    <!-- FEATURES SECTION -->
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="ws-card h-100 mb-0" style="padding: 1.25rem;">
+          <div class="metric-icon navy mb-2"><i class="fa-solid fa-door-open"></i></div>
+          <h5 style="color: var(--primary-navy); font-weight: 700; font-size: 1.05rem;">Seminar Hall Availability</h5>
+          <p class="ws-subtitle" style="font-size: 0.85rem;">View active hall schedules and immediately see open time slots before requesting.</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="ws-card h-100 mb-0" style="padding: 1.25rem;">
+          <div class="metric-icon success mb-2"><i class="fa-solid fa-laptop-code"></i></div>
+          <h5 style="color: var(--primary-navy); font-weight: 700; font-size: 1.05rem;">Easy Online Booking</h5>
+          <p class="ws-subtitle" style="font-size: 0.85rem;">Submit date, time, event details, and department information through a streamlined online form.</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="ws-card h-100 mb-0" style="padding: 1.25rem;">
+          <div class="metric-icon warning mb-2"><i class="fa-solid fa-list-check"></i></div>
+          <h5 style="color: var(--primary-navy); font-weight: 700; font-size: 1.05rem;">Booking Status Tracking</h5>
+          <p class="ws-subtitle" style="font-size: 0.85rem;">Track real-time status updates (Approved, Pending, or Rejected) on your personal dashboard.</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="ws-card h-100 mb-0" style="padding: 1.25rem;">
+          <div class="metric-icon danger mb-2"><i class="fa-regular fa-calendar-days"></i></div>
+          <h5 style="color: var(--primary-navy); font-weight: 700; font-size: 1.05rem;">Calendar-Based Scheduling</h5>
+          <p class="ws-subtitle" style="font-size: 0.85rem;">Integrated monthly calendar with marked holidays to prevent double-booking.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    Seminar Hall Booking System &copy; 2026. All rights reserved.
+  </footer>
+
+</body>
+</html>

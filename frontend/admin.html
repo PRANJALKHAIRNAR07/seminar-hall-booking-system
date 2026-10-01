@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Seminar Hall Booking System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="app-navbar">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-icon"><i class="fa-solid fa-user-shield"></i></div>
+      <span>Seminar Hall <span style="color: #60A5FA; font-weight:400;">Admin Console</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="admin.html" class="nav-btn active"><i class="fa-regular fa-calendar-days"></i> Calendar & Approvals</a>
+      <a href="admin-dashboard.html" class="nav-btn"><i class="fa-solid fa-clock-rotate-left"></i> Booking History</a>
+      <a href="#" onclick="logout(); return false;" class="btn-nav-logout ms-2"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-container">
+    
+    <!-- METRICS -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Total Requests</p>
+          <h3 id="admTotal">0</h3>
+        </div>
+        <div class="metric-icon navy"><i class="fa-solid fa-folder"></i></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Pending Review</p>
+          <h3 id="admPending">0</h3>
+        </div>
+        <div class="metric-icon warning"><i class="fa-solid fa-hourglass-half"></i></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Approved Slots</p>
+          <h3 id="admApproved">0</h3>
+        </div>
+        <div class="metric-icon success"><i class="fa-solid fa-calendar-check"></i></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Rejected Slots</p>
+          <h3 id="admRejected">0</h3>
+        </div>
+        <div class="metric-icon danger"><i class="fa-solid fa-calendar-xmark"></i></div>
+      </div>
+    </div>
+
+    <!-- CALENDAR CARD -->
+    <div class="ws-card">
+      <div class="ws-card-header">
+        <div>
+          <h3 class="ws-title"><i class="fa-regular fa-calendar-days" style="color: var(--royal-blue);"></i> All Hall Bookings & Schedule</h3>
+          <p class="ws-subtitle">Overview of all approved events, pending requests, and official holidays</p>
+        </div>
+      </div>
+
+      <div class="calendar-legend">
+        <span class="legend-item"><span class="legend-dot approved"></span> Approved Booking</span>
+        <span class="legend-item"><span class="legend-dot pending"></span> Pending Review</span>
+        <span class="legend-item"><span class="legend-dot holiday"></span> Holiday / Campus Closed</span>
+      </div>
+
+      <div id="calendar"></div>
+    </div>
+
+    <!-- PENDING & REQUESTS TABLE CARD -->
+    <div class="ws-card">
+      <div class="ws-card-header">
+        <div>
+          <h3 class="ws-title"><i class="fa-solid fa-list-check" style="color: var(--royal-blue);"></i> Booking Requests Management</h3>
+          <p class="ws-subtitle">Approve, reject or delete seminar hall reservation requests</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="ws-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Time Slot</th>
+              <th>Event Title</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="requestsTable">
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">Loading requests...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PHASE 3: HOLIDAY & CAMPUS CLOSURES MANAGEMENT CARD -->
+    <div class="ws-card">
+      <div class="ws-card-header">
+        <div>
+          <h3 class="ws-title"><i class="fa-solid fa-umbrella-beach" style="color: var(--danger);"></i> Holiday & Campus Closures Management</h3>
+          <p class="ws-subtitle">Configure annual holidays and campus closure dates to block hall bookings</p>
+        </div>
+      </div>
+
+      <form onsubmit="event.preventDefault(); addHoliday();" class="row g-3 mb-4 p-3" style="background: #F8FBFF; border: 1px solid var(--border-color); border-radius: 8px;">
+        <div class="col-md-4">
+          <label class="form-label">Holiday Date</label>
+          <input id="holDate" type="date" class="form-control" required>
+        </div>
+        <div class="col-md-5">
+          <label class="form-label">Holiday / Closure Title</label>
+          <input id="holName" type="text" class="form-control" placeholder="e.g. Annual Sports Day / Deepavali" required>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn-ws-primary w-100">
+            <i class="fa-solid fa-plus me-1"></i> Add Holiday
+          </button>
+        </div>
+      </form>
+
+      <div class="table-responsive">
+        <table class="ws-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Holiday Title</th>
+              <th>Category</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody id="holidaysTable">
+            <tr>
+              <td colspan="5" class="text-center py-3 text-muted">Loading holidays...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    Seminar Hall Booking System &copy; 2026. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="holidays.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const role = localStorage.getItem("role");
+      if (!user || role !== "admin") {
+        showAlert("Admin access required.", "warning");
+        setTimeout(() => { window.location.href = "login.html"; }, 1000);
+        return;
+      }
+      loadRequests();
+      loadAdminHolidays();
+    });
+
+    function loadRequests() {
+      fetch(API + "/requests", { headers: getAuthHeaders() })
+        .then(res => res.json())
+        .then(data => {
+          let html = "";
+          let total = (data || []).length;
+          let approved = 0, pending = 0, rejected = 0;
+
+          if (!data || !Array.isArray(data) || data.length === 0) {
+            document.getElementById("requestsTable").innerHTML = `
+              <tr>
+                <td colspan="7" class="empty-state">
+                  <i class="fa-solid fa-folder-open d-block mb-2"></i> No booking requests in database.
+                </td>
+              </tr>
+            `;
+            return;
+          }
+
+          data.forEach(r => {
+            const status = r.status || "Pending";
+            if (status === "Approved") approved++;
+            else if (status === "Pending") pending++;
+            else rejected++;
+
+            const badgeClass = status === "Approved" ? "badge-approved" : (status === "Pending" ? "badge-pending" : "badge-rejected");
+            const iconClass = status === "Approved" ? "fa-circle-check" : (status === "Pending" ? "fa-clock" : "fa-circle-xmark");
+
+            const dateFormatted = r.booking_date ? r.booking_date.split("T")[0] : "N/A";
+
+            html += `
+              <tr>
+                <td><strong>#${r.booking_id}</strong></td>
+                <td><i class="fa-regular fa-calendar me-1 text-primary"></i> ${dateFormatted}</td>
+                <td><i class="fa-regular fa-clock me-1 text-muted"></i> ${r.start_time} - ${r.end_time}</td>
+                <td><strong>${r.event_name}</strong></td>
+                <td>${r.dept || 'N/A'}</td>
+                <td>
+                  <span class="badge-ws ${badgeClass}">
+                    <i class="fa-solid ${iconClass}"></i> ${status}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-2">
+                    ${status === "Pending" ? `
+                      <button class="btn-ws-success" onclick="approveBooking(${r.booking_id})">
+                        <i class="fa-solid fa-check"></i> Approve
+                      </button>
+                      <button class="btn-ws-warning" onclick="rejectBooking(${r.booking_id})">
+                        <i class="fa-solid fa-xmark"></i> Reject
+                      </button>
+                    ` : ''}
+                    <button class="btn-ws-danger" onclick="deleteBooking(${r.booking_id})">
+                      <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+
+          document.getElementById("requestsTable").innerHTML = html;
+          document.getElementById("admTotal").innerText = total;
+          document.getElementById("admApproved").innerText = approved;
+          document.getElementById("admPending").innerText = pending;
+          document.getElementById("admRejected").innerText = rejected;
+        })
+        .catch(err => {
+          console.error("Error loading requests:", err);
+        });
+    }
+
+    function approveBooking(id) {
+      fetch(API + "/approve", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ id: id })
+      })
+      .then(res => res.text())
+      .then(data => {
+        showAlert(data, "success");
+        loadRequests();
+        const calendarEl = document.getElementById("calendar");
+        if (calendarEl) renderFullCalendar(calendarEl, true);
+      });
+    }
+
+    function rejectBooking(id) {
+      fetch(API + "/reject", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ id: id })
+      })
+      .then(res => res.text())
+      .then(data => {
+        showAlert(data, "warning");
+        loadRequests();
+        const calendarEl = document.getElementById("calendar");
+        if (calendarEl) renderFullCalendar(calendarEl, true);
+      });
+    }
+
+    function deleteBooking(id) {
+      if (!confirm("Are you sure you want to permanently delete booking #" + id + "?")) return;
+
+      fetch(API + "/deleteBooking", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ id: id })
+      })
+      .then(res => res.text())
+      .then(data => {
+        showAlert(data, "danger");
+        loadRequests();
+        const calendarEl = document.getElementById("calendar");
+        if (calendarEl) renderFullCalendar(calendarEl, true);
+      });
+    }
+
+    /* PHASE 3: HOLIDAY ADMIN MANAGEMENT */
+    function loadAdminHolidays() {
+      fetch(API + "/holidays")
+        .then(res => res.json())
+        .then(data => {
+          let html = "";
+          if (!data || data.length === 0) {
+            document.getElementById("holidaysTable").innerHTML = `
+              <tr><td colspan="5" class="text-center text-muted py-3">No holidays configured in database.</td></tr>
+            `;
+            return;
+          }
+
+          data.forEach(h => {
+            const dateStr = h.holiday_date ? h.holiday_date.split("T")[0] : h.date;
+            html += `
+              <tr>
+                <td><strong>#${h.holiday_id || 'N/A'}</strong></td>
+                <td><i class="fa-regular fa-calendar me-1 text-danger"></i> ${dateStr}</td>
+                <td><strong>${h.holiday_name}</strong></td>
+                <td><span class="badge-ws badge-rejected" style="font-size: 0.75rem;">${h.category || 'College'}</span></td>
+                <td class="text-end">
+                  <button class="btn-ws-danger" onclick="deleteHoliday(${h.holiday_id})">
+                    <i class="fa-solid fa-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+          document.getElementById("holidaysTable").innerHTML = html;
+        });
+    }
+
+    function addHoliday() {
+      const dateVal = document.getElementById("holDate").value;
+      const nameVal = document.getElementById("holName").value.trim();
+
+      if (!dateVal || !nameVal) return;
+
+      fetch(API + "/holidays", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          holiday_date: dateVal,
+          holiday_name: nameVal,
+          category: "College"
+        })
+      })
+      .then(res => res.text())
+      .then(msg => {
+        showAlert(msg, msg.includes("successfully") ? "success" : "warning");
+        document.getElementById("holDate").value = "";
+        document.getElementById("holName").value = "";
+        loadAdminHolidays();
+        if (typeof loadHolidaysFromAPI === "function") {
+          loadHolidaysFromAPI().then(() => {
+            const calendarEl = document.getElementById("calendar");
+            if (calendarEl) renderFullCalendar(calendarEl, true);
+          });
+        }
+      });
+    }
+
+    function deleteHoliday(id) {
+      if (!confirm("Are you sure you want to remove this holiday/closure?")) return;
+
+      fetch(API + "/holidays/" + id, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+      })
+      .then(res => res.text())
+      .then(msg => {
+        showAlert(msg, "info");
+        loadAdminHolidays();
+        if (typeof loadHolidaysFromAPI === "function") {
+          loadHolidaysFromAPI().then(() => {
+            const calendarEl = document.getElementById("calendar");
+            if (calendarEl) renderFullCalendar(calendarEl, true);
+          });
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

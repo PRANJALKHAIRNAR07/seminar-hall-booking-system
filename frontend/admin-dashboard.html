@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Booking History - Seminar Hall Booking System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="app-navbar">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-icon"><i class="fa-solid fa-user-shield"></i></div>
+      <span>Seminar Hall <span style="color: #60A5FA; font-weight:400;">Admin Console</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="admin.html" class="nav-btn"><i class="fa-regular fa-calendar-days"></i> Calendar & Approvals</a>
+      <a href="admin-dashboard.html" class="nav-btn active"><i class="fa-solid fa-clock-rotate-left"></i> Booking History</a>
+      <a href="#" onclick="logout(); return false;" class="btn-nav-logout ms-2"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-container">
+
+    <!-- METRICS GRID -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Total History</p>
+          <h3 id="histTotal">0</h3>
+        </div>
+        <div class="metric-icon navy"><i class="fa-solid fa-database"></i></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Approved Events</p>
+          <h3 id="histApproved">0</h3>
+        </div>
+        <div class="metric-icon success"><i class="fa-solid fa-calendar-check"></i></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Pending Requests</p>
+          <h3 id="histPending">0</h3>
+        </div>
+        <div class="metric-icon warning"><i class="fa-solid fa-clock"></i></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <p>Rejected Requests</p>
+          <h3 id="histRejected">0</h3>
+        </div>
+        <div class="metric-icon danger"><i class="fa-solid fa-ban"></i></div>
+      </div>
+    </div>
+
+    <!-- MAIN TABLE CARD -->
+    <div class="ws-card">
+      <div class="ws-card-header">
+        <div>
+          <h3 class="ws-title"><i class="fa-solid fa-history" style="color: var(--royal-blue);"></i> Master Booking History</h3>
+          <p class="ws-subtitle">Complete log of all past and upcoming seminar hall bookings</p>
+        </div>
+        <div style="max-width: 300px; width: 100%;">
+          <input id="searchInput" type="text" class="form-control" placeholder="Search by event or dept..." onkeyup="filterHistory()">
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="ws-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Booking Date</th>
+              <th>Time Window</th>
+              <th>Event Title</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable">
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">Loading history logs...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    Seminar Hall Booking System &copy; 2026. All rights reserved.
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    let allHistory = [];
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const role = localStorage.getItem("role");
+      if (!user || role !== "admin") {
+        showAlert("Admin access required.", "warning");
+        setTimeout(() => { window.location.href = "login.html"; }, 1000);
+        return;
+      }
+      loadHistory();
+    });
+
+    function loadHistory() {
+      fetch(API + "/requests", { headers: getAuthHeaders() })
+        .then(res => res.json())
+        .then(data => {
+          allHistory = data || [];
+          renderHistoryTable(allHistory);
+        })
+        .catch(err => {
+          console.error("Error loading history:", err);
+          document.getElementById("historyTable").innerHTML = `
+            <tr>
+              <td colspan="7" class="text-center text-danger py-4">Failed to load booking history logs.</td>
+            </tr>
+          `;
+        });
+    }
+
+    function renderHistoryTable(data) {
+      let html = "";
+      let approved = 0, pending = 0, rejected = 0;
+
+      if (!data || data.length === 0) {
+        document.getElementById("historyTable").innerHTML = `
+          <tr>
+            <td colspan="7" class="empty-state">
+              <i class="fa-solid fa-box-open d-block mb-2"></i> No matching records found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      data.forEach(r => {
+        const status = r.status || "Pending";
+        if (status === "Approved") approved++;
+        else if (status === "Pending") pending++;
+        else rejected++;
+
+        const badgeClass = status === "Approved" ? "badge-approved" : (status === "Pending" ? "badge-pending" : "badge-rejected");
+        const iconClass = status === "Approved" ? "fa-circle-check" : (status === "Pending" ? "fa-clock" : "fa-circle-xmark");
+
+        const dateFormatted = r.booking_date ? r.booking_date.split("T")[0] : "N/A";
+
+        html += `
+          <tr>
+            <td><strong>#${r.booking_id}</strong></td>
+            <td><i class="fa-regular fa-calendar me-1 text-primary"></i> ${dateFormatted}</td>
+            <td><i class="fa-regular fa-clock me-1 text-muted"></i> ${r.start_time} - ${r.end_time}</td>
+            <td><strong>${r.event_name}</strong></td>
+            <td>${r.dept || 'N/A'}</td>
+            <td>
+              <span class="badge-ws ${badgeClass}">
+                <i class="fa-solid ${iconClass}"></i> ${status}
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn-ws-danger" onclick="deleteBooking(${r.booking_id})">
+                <i class="fa-solid fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("historyTable").innerHTML = html;
+      document.getElementById("histTotal").innerText = allHistory.length;
+      document.getElementById("histApproved").innerText = approved;
+      document.getElementById("histPending").innerText = pending;
+      document.getElementById("histRejected").innerText = rejected;
+    }
+
+    function filterHistory() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = allHistory.filter(r => 
+        (r.event_name && r.event_name.toLowerCase().includes(query)) ||
+        (r.dept && r.dept.toLowerCase().includes(query)) ||
+        (r.status && r.status.toLowerCase().includes(query))
+      );
+      renderHistoryTable(filtered);
+    }
+
+    function deleteBooking(id) {
+      if (!confirm("Are you sure you want to permanently remove booking #" + id + "?")) return;
+
+      fetch(API + "/deleteBooking", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ id: id })
+      })
+      .then(res => res.text())
+      .then(data => {
+        showAlert(data, "danger");
+        loadHistory();
+      });
+    }
+  </script>
+
+</body>
+</html>
